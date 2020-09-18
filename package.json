@@ -4,7 +4,8 @@
   "description": "A simple backend project for tracking tech bugs",
   "main": "server.js",
   "scripts": {
-    "test": "start"
+    "test": "start",
+    "start":"nodemon server"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
