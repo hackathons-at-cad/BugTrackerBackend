@@ -5,7 +5,7 @@ const express = require('express')
 const app = express()
 let port=300
 
-
+const user_router= require('./controllers/users_controllers')
 
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors());
@@ -26,7 +26,7 @@ app.get('/', (req, res)=>{
     res.send(`running on port ${port}`)
 })
 
-// app.use('/todos', todoRoutes)
+app.use('/users', user_router)
 
 app.listen(port,  (e)=>{
     if(e){
