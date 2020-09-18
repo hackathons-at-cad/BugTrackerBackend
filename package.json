@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "start",
-    "start":"nodemon server"
+    "start": "nodemon server"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
@@ -13,10 +13,12 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.2.0",
     "gridfs-stream": "^1.1.1",
+    "is-empty": "^1.2.0",
     "mongoose": "^5.4.0",
     "multer": "^1.4.2",
     "multer-gridfs-storage": "^4.2.0",
-    "shortid": "^2.2.15"
+    "shortid": "^2.2.15",
+    "validator": "^13.1.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
