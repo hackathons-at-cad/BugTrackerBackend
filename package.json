@@ -2,7 +2,7 @@
   "name": "y",
   "version": "1.0.0",
   "description": "A simple backend project for tracking tech bugs",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "test": "start",
     "start": "nodemon server"
