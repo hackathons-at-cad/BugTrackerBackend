@@ -78,21 +78,21 @@ user_router.post("/login", async (req, res) => {
   }
 });
 
-// user_router.delete("/delete", auth, async (req, res) => {
-//   try {
-//     const deletedUser = await User.findByIdAndDelete(req.user);
-//     res.json(deletedUser);
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// });
+user_router.delete("/delete", auth, async (req, res) => {
+  try {
+    const deletedUser = await User.findByIdAndDelete(req.user);
+    res.json(deletedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 user_router.post("/tokenIsValid", async (req, res) => {
   try {
     const token = req.header("x-auth-token");
     if (!token) return res.json(false);
 
-    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    const verified = jwt.verify(token, "secret");
     if (!verified) return res.json(false);
 
     const user = await User.findById(verified.id);
@@ -104,13 +104,13 @@ user_router.post("/tokenIsValid", async (req, res) => {
   }
 });
 
-// user_router.get("/", auth, async (req, res) => {
-//   const user = await User.findById(req.user);
-//   res.json({
-//     displayName: user.displayName,
-//     id: user._id,
-//   });
-// });
+user_router.get("/", auth, async (req, res) => {
+  const user = await User.findById(req.user);
+  res.json({
+    displayName: user.displayName,
+    id: user._id,
+  });
+});
 
 
 module.exports = user_router;

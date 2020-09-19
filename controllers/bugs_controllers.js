@@ -56,7 +56,7 @@ bugs_routes.route('/update/:id').post(function(req, res) {
     });
 });
 
-bugs_routes.delete('remove/:id', (req, res, next)=>{
+bugs_routes.delete('/remove/:id', (req, res, next)=>{
     Bugs_Form.findOneAndDelete({"_id":req.params.id})
     .then(data=>res.json(data))
     .catch(next)

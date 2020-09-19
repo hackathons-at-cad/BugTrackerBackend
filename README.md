@@ -14,6 +14,6 @@
 | {api-route}/user/  |  get all engineers username  | GET | id, name |
 | {api-route}/bugs/  |  get all documented bugs | GET | id, engineer_name, date, lable, project, priority |
 | {api-route}/bugs/:id  |  get single bug by id | GET | id, engineer_name, date, lable, project, priority |
-| {api-route}/bugs/create_bug  | create | GET | id, engineer_name, date, lable, project, priority |
-| {api-route}/bugs/update/:id | create | POST | id, engineer_name, date, lable, project, priority |
-| {api-route}/bugs/remove/:id| create | POST | _id, engineer_name, date, lable, project, priority |
+| {api-route}/bugs/create_bug | create new bug  | POST| id, engineer_name, date, lable, project, priority |
+| {api-route}/bugs/update/:id | update bug | POST | id, engineer_name, date, lable, project, priority |
+| {api-route}/bugs/remove/:id| delete bug | DELETE | _id, engineer_name, date, lable, project, priority |

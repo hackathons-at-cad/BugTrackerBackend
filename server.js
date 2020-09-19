@@ -20,13 +20,13 @@ const user_router= require('./controllers/users_controllers')
 const bugs_router= require('./controllers/bugs_controllers')
 
 
-
+let uri = "mongodb+srv://major:major@cluster0.el0eg.gcp.mongodb.net/major?retryWrites=true&w=majority"||"mongodb://127.0.0.1:27017/bugs"
 
 
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(cors());
 app.use(bodyParser.json());
-mongoose.connect('mongodb://127.0.0.1:27017/bugs', { useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true, });
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true, });
 const connection = mongoose.connection;
 connection.once('open', function() {
     console.log("MongoDB database connection established successfully");
