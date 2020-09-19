@@ -5,7 +5,7 @@ const express = require('express')
 const passport = require("passport");
 
 const app = express()
-let port=process.env.PORT||300
+let port=process.env.PORT||301
 
 
 app.use(express.json());
@@ -20,7 +20,7 @@ const user_router= require('./controllers/users_controllers')
 const bugs_router= require('./controllers/bugs_controllers')
 
 
-let uri = "mongodb+srv://major:major@cluster0.el0eg.gcp.mongodb.net/major?retryWrites=true&w=majority"||"mongodb://127.0.0.1:27017/bugs"
+let uri = "mongodb+srv://major:major@cluster0.el0eg.gcp.mongodb.net/major?retryWrites=true&w=majority" || "mongodb://127.0.0.1:27017/bugs"
 
 
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
