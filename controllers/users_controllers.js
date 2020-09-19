@@ -1,105 +1,116 @@
-const express = require("express");
-const user_router = express.Router();
-const User = require("../models/users_model");
+
+
+const user_router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const auth = require("../Middlewares/auth");
+const User = require("../models/users_model");
+require("dotenv").config();
+// MYSQL=jllgshllWEUJHGHYJkjsfjds90
+let JWT_KEY="secret"
+user_router.post("/register", async (req, res) => {
+  try {
+    let { email, password, passwordCheck, displayName } = req.body;
 
-const validateRegisterInput = require("../validations/user_register_validator");
-const validateLoginInput = require("../validations/user_login_validation");
+    // validate
 
-user_router.post("/register", (req, res) => {
-	const { errors, isValid } = validateRegisterInput(req.body);
+    if (!email || !password || !passwordCheck)
+      return res.status(400).json({ msg: "Not all fields have been entered." });
+    if (password.length < 5)
+      return res
+        .status(400)
+        .json({ msg: "The password needs to be at least 5 characters long." });
+    if (password !== passwordCheck)
+      return res
+        .status(400)
+        .json({ msg: "Enter the same password twice for verification." });
 
-	if (!isValid) {
-		return res.status(400).json(errors);
-	}
+    const existingUser = await User.findOne({ email: email });
+    if (existingUser)
+      return res
+        .status(400)
+        .json({ msg: "An account with this email already exists." });
 
-	User.findOne({ email: req.body.email }).then(user => {
-		if (user) {
-			return res.status(400).json({ message: "email already exists" });
-		} else {
-			const newUser = new User({
-				name: req.body.name,
-				email: req.body.email,
-				password: req.body.password
-			});
+    if (!displayName) displayName = email;
 
-			bcrypt.genSalt(10, (err, salt) => {
-				bcrypt.hash(newUser.password, salt, (err, hash) => {
-					if (err) throw err;
-					newUser.password = hash;
-					newUser
-						.save()
-						.then(user => res.json(user))
-						.catch(err => console.log(err));
-				});
-			});
-		}
-	});
-});
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(password, salt);
 
-user_router.post("/login", (req, res) => {
-	const { errors, isValid } = validateLoginInput(req.body);
-
-	if (!isValid) {
-		return res.status(400).json(errors);
-	}
-
-	const email = req.body.email;
-	const password = req.body.password;
-
-	User.findOne({ email: email }).then(user => {
-		if (!user) {
-			return res.status(404).json({ emailNotFound: "email not found" });
-		}
-
-		bcrypt.compare(password, user.password).then(isMatch => {
-			if (isMatch) {
-				const payload = {
-					id: user.id,
-					name: user.name
-				};
-
-				jwt.sign(
-					payload,
-					"secret",
-					{
-						expiresIn: 31556926
-					},
-					(err, token) => {
-						res.json({
-							success: true,
-							token: `Bearer ${token}`
-						});
-					}
-				);
-			} else {
-				return res.status(400).json({
-					passwordIncorrect: "password incorrect"
-				});
-			}
-		});
-	});
-});
-
-user_router.route('/').get(function(req, res) {
-    User.find(function(err, users) {
-         if (err) {
-             console.log(err);
-         } else {
-             res.json(users);
-         }
-     });
- });
- 
-
-user_router.route('/:id').get(function(req, res) {
-    let id = req.params.id;
-    User.findById(id, function(err, user_name) {
-        res.json(user_name);
+    const newUser = new User({
+      email,
+      password: passwordHash,
+      displayName,
     });
+    const savedUser = await newUser.save();
+    res.json(savedUser);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
+user_router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // validate
+    if (!email || !password)
+      return res.status(400).json({ msg: "Not all fields have been entered." });
+
+    const user = await User.findOne({ email: email });
+    if (!user)
+      return res
+        .status(400)
+        .json({ msg: "No account with this email has been registered." });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(400).json({ msg: "Invalid credentials." });
+
+    const token = jwt.sign({ id: user._id },"secret");
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        displayName: user.displayName,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// user_router.delete("/delete", auth, async (req, res) => {
+//   try {
+//     const deletedUser = await User.findByIdAndDelete(req.user);
+//     res.json(deletedUser);
+//   } catch (err) {
+//     res.status(500).json({ error: err.message });
+//   }
+// });
+
+user_router.post("/tokenIsValid", async (req, res) => {
+  try {
+    const token = req.header("x-auth-token");
+    if (!token) return res.json(false);
+
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verified) return res.json(false);
+
+    const user = await User.findById(verified.id);
+    if (!user) return res.json(false);
+
+    return res.json(true);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// user_router.get("/", auth, async (req, res) => {
+//   const user = await User.findById(req.user);
+//   res.json({
+//     displayName: user.displayName,
+//     id: user._id,
+//   });
+// });
 
 
 module.exports = user_router;
