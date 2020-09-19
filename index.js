@@ -5,7 +5,7 @@ const express = require('express')
 const passport = require("passport");
 
 const app = express()
-let port=300
+let port=process.env.PORT||300
 
 
 app.use(express.json());

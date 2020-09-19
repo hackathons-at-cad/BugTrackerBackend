@@ -1,11 +1,11 @@
 {
-  "name": "y",
+  "name": "bugtrackerapp",
   "version": "1.0.0",
   "description": "A simple backend project for tracking tech bugs",
   "main": "index.js",
   "scripts": {
     "test": "start",
-    "start": "nodemon server"
+    "start": "nodemon index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
