@@ -32,10 +32,6 @@ connection.once('open', function() {
     console.log("MongoDB database connection established successfully");
 })
 
-app.use(express.static('component'));  
-app.use(express.static('public'));  
-
-
 
 
 app.get('/', (req, res)=>{
