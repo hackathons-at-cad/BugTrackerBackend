@@ -15,6 +15,7 @@
     "express": "^4.16.4",
     "express-fileupload": "^1.2.0",
     "gridfs-stream": "^1.1.1",
+    "heroku": "^7.43.0",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.4.0",
