@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-
+//the jwt is what enables you get the token
 const auth = (req, res, next) => {
   try {
     const token = req.header("x-auth-token");
